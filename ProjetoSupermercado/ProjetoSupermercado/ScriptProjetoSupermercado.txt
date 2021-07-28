@@ -1,0 +1,105 @@
+CREATE DATABASE IF NOT EXISTS Supermercado;
+
+USE Supermercado;
+
+CREATE TABLE IF NOT EXISTS funcionario 
+(  
+   id_funcionario integer auto_increment NOT NULL,
+   cpf varchar(14) NOT NULL,
+   nome character varying (80) NOT NULL,
+   data_nasc varchar(10),
+	rua character varying (80),
+	numero integer,
+	bairro character varying (80),
+	cep integer NOT NULL,
+	complemento character varying (50),
+	cidade varchar(100),
+	uf varchar(2),	 
+    celular varchar(14),
+	email character varying (80),
+	cargo varchar(30),
+	salario float NOT NULL,
+	login character varying (50),
+	senha character varying (20),
+   CONSTRAINT pk_funcionario PRIMARY KEY (id_funcionario)
+);
+
+
+CREATE TABLE IF NOT EXISTS cliente
+( 
+	id_cliente integer auto_increment NOT NULL,
+	cpf varchar(14)  NOT NULL,
+	nome character varying (80) NOT NULL,
+   	data_nasc varchar(10),
+	rua character varying (80),
+	numero integer,
+	bairro character varying (80),
+	cep integer NOT NULL,
+	complemento character varying (50),
+	cidade varchar(100),
+	uf varchar(2),	
+    celular varchar(14),
+   	email character varying (80),
+  	CONSTRAINT pk_cliente  PRIMARY KEY (id_cliente)
+    );
+
+
+CREATE TABLE IF NOT EXISTS  fornecedor 
+( 
+	id_fornecedor integer auto_increment NOT NULL,
+	cnpj varchar(18) NOT NULL,
+	razao_social character varying (80),
+	rua character varying (80),
+	numero integer,
+	bairro character varying (80),
+	cep integer NOT NULL,
+	complemento character varying (50),
+	cidade varchar(100),
+	uf varchar(2),	
+    telefone varchar(13) NOT NULL,
+   	email character varying (80),
+  	CONSTRAINT pk_fornecedor PRIMARY KEY (id_fornecedor)
+);
+
+CREATE TABLE IF NOT EXISTS produto
+( 
+  id_produto integer auto_increment NOT NULL,
+  descricao character varying (50),
+  categoria varchar(50),
+  unidade_medida varchar(20),
+  valor float,
+  qtde_estoque integer NOT NULL,
+  fornecedor integer,
+  CONSTRAINT pk_produto PRIMARY KEY (id_produto),
+  CONSTRAINT fk_fornecedor FOREIGN KEY (fornecedor) REFERENCES fornecedor (id_fornecedor) ON UPDATE CASCADE
+);
+
+
+CREATE TABLE IF NOT EXISTS venda 
+( 
+  id_venda integer auto_increment NOT NULL,
+  cliente integer,
+  id_produto integer NOT NULL,
+  qtde float NOT NULL,
+  subtotal float,
+  total_venda float NOT NULL,
+  dt_venda date NOT NULL,
+  INDEX idx_cliente (cliente),
+ CONSTRAINT pk_venda PRIMARY KEY (id_venda),
+CONSTRAINT fk_cliente FOREIGN KEY (cliente) REFERENCES cliente (id_cliente)
+);
+
+
+CREATE TABLE IF NOT EXISTS  pagamento 
+( 
+  id_pagamento integer NOT NULL auto_increment,
+  id_venda integer,
+  forma_pagamento character varying (20) NOT NULL,
+  parcelas integer,
+  valor_recebido float,
+  troco float,
+  INDEX idx_idvenda (id_venda),
+  CONSTRAINT pk_id_pagamento PRIMARY KEY (id_pagamento),
+  CONSTRAINT fk_idvenda FOREIGN KEY (id_venda) REFERENCES venda (id_venda) ON DELETE RESTRICT ON UPDATE CASCADE
+)
+
